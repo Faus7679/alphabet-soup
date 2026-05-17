@@ -17,10 +17,11 @@ def load_puzzle(path):
     with open(path, "r", encoding="utf-8") as file:
         lines = [line.rstrip("\n") for line in file]
 
-    rows, cols = map(int, lines[0].strip().lower().split("x"))
+    dimension_line = lines[0].strip().replace("X", "x")
+    rows, cols = map(int, dimension_line.split("x", 1))
     board = []
     for index in range(1, rows + 1):
-        board.append(lines[index].split())
+        board.append([cell.upper() for cell in lines[index].split()])
 
     words = [line for line in lines[rows + 1 :] if line.strip()]
     return rows, cols, board, words
@@ -31,12 +32,11 @@ def find_word(board, rows, cols, word):
     if not normalized_word:
         return None
 
-    normalized_board = [[cell.upper() for cell in row] for row in board]
     length = len(normalized_word)
 
     for row in range(rows):
         for col in range(cols):
-            if normalized_board[row][col] != normalized_word[0]:
+            if board[row][col] != normalized_word[0]:
                 continue
             for row_step, col_step in DIRECTIONS:
                 end_row = row + (length - 1) * row_step
@@ -48,7 +48,7 @@ def find_word(board, rows, cols, word):
                 for index in range(length):
                     next_row = row + index * row_step
                     next_col = col + index * col_step
-                    if normalized_board[next_row][next_col] != normalized_word[index]:
+                    if board[next_row][next_col] != normalized_word[index]:
                         matched = False
                         break
                 if matched:
