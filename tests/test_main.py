@@ -1,5 +1,4 @@
 import io
-import os
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -36,16 +35,14 @@ ABC
 ZZZ
 A E I
 """
-        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False) as file:
-            file.write(content)
-            file_path = file.name
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_path = f"{temp_dir}/input.txt"
+            with open(file_path, "w", encoding="utf-8") as file:
+                file.write(content)
 
-        output = io.StringIO()
-        try:
+            output = io.StringIO()
             with redirect_stdout(output):
                 main.solve(file_path)
-        finally:
-            os.unlink(file_path)
 
         self.assertEqual(output.getvalue().splitlines(), ["ABC 0:0 0:2", "A E I 0:0 2:2"])
 

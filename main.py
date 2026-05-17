@@ -1,4 +1,5 @@
 import sys
+import re
 
 
 DIRECTIONS = (
@@ -17,8 +18,8 @@ def load_puzzle(path):
     with open(path, "r", encoding="utf-8") as file:
         lines = [line.rstrip("\n") for line in file]
 
-    dimension_line = lines[0].strip().replace("X", "x")
-    rows, cols = map(int, dimension_line.split("x", 1))
+    dimension_line = lines[0].strip()
+    rows, cols = map(int, re.split(r"[xX]", dimension_line, maxsplit=1))
     board = []
     for index in range(1, rows + 1):
         board.append([cell.upper() for cell in lines[index].split()])
