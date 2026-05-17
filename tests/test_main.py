@@ -1,4 +1,5 @@
 import io
+import os
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -40,8 +41,11 @@ A E I
             file_path = file.name
 
         output = io.StringIO()
-        with redirect_stdout(output):
-            main.solve(file_path)
+        try:
+            with redirect_stdout(output):
+                main.solve(file_path)
+        finally:
+            os.unlink(file_path)
 
         self.assertEqual(output.getvalue().splitlines(), ["ABC 0:0 0:2", "A E I 0:0 2:2"])
 
