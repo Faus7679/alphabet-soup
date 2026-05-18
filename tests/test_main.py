@@ -1,7 +1,11 @@
 import io
+import os
+import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import main
 
